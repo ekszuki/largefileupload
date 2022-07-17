@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+    mongo:
+      container_name: mcommunication-mongo
+      image: mongo:latest
+      restart: unless-stopped
+    #   environment:
+        # - MONGO_DATA_DIR=/data/db
+        # - MONGO_LOG_DIR=/dev/null
+
+    #   volumes:
+    #     - ./mongo_data:/data/db
+
+      ports:
+          - "27017:27017"
+      networks:
+          mcommunication-network:
+              ipv4_address: 172.50.23.2
+
+    api:
+        container_name: mcommunication-api
+        environment:
+            - PORT_GRPC_URL=mcommunication-grpc:9090
+        build:
+            context: .
+            dockerfile: Dockerfile-API
+
+        mem_limit: 200m
+        mem_reservation: 128M
+        # cpus: 0.5
+
+        ports:
+            - 3000:3000
+        depends_on:
+            - mongo
+            - grpc
+        networks:
+            mcommunication-network:
+                ipv4_address: 172.50.23.4
+
+    grpc:
+        container_name: mcommunication-grpc
+        environment:
+            - MONGO_HOST=mcommunication-mongo
+
+        build:
+            context: .
+            dockerfile: Dockerfile-GRPC
+
+        mem_limit: 200m
+        mem_reservation: 128M
+        # cpus: 0.5
+
+        ports:
+            - 9090:9090
+        depends_on:
+            - mongo
+        networks:
+            mcommunication-network:
+                ipv4_address: 172.50.23.5
+
+networks:
+    mcommunication-network:
+        name: mcommunication-network
+        driver: bridge
+        ipam:
+          config:
+            - subnet: 172.50.23.0/24

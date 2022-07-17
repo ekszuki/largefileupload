@@ -1,0 +1,19 @@
+FROM golang:1.18.4-buster as builder
+
+# Workdir
+WORKDIR /
+
+# Add current working directory
+COPY . /
+
+# Build
+RUN go build -o ./portDomain/cmd/main ./portDomain/cmd/main.go
+
+# ========================== Runtime Image ==========================
+FROM ubuntu:21.04
+
+WORKDIR /app
+
+COPY --from=builder portDomain/cmd/main .
+
+ENTRYPOINT ["/app/main"]
