@@ -15,3 +15,6 @@ start-containers:
 
 stop-containers:
 	@docker-compose down
+
+run-tests:
+	@go test -cover ./...
