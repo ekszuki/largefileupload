@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"ekszuki/uploader/portDomain/app"
-	"ekszuki/uploader/portDomain/repository/mongodb"
+	"ekszuki/uploader/portDomain/app/repository/mongodb"
 	"ekszuki/uploader/utils"
 	"fmt"
 	"net"
