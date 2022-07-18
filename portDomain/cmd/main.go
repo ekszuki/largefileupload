@@ -23,7 +23,7 @@ func main() {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	grpcAdd := fmt.Sprintf(":%s", utils.GetEnv("GRPC", "9090"))
+	grpcAdd := fmt.Sprintf(":%s", utils.GetEnv("GRPC-PORT", "9090"))
 	logCtx.Infof("Creating TCP Listener on address %s", grpcAdd)
 	listen, err := net.Listen("tcp", grpcAdd)
 	if err != nil {
