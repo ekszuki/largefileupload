@@ -63,3 +63,18 @@ func (p *Port) UploadPortFile(ctx context.Context, dataStream io.ReadCloser) err
 		}
 	}
 }
+
+func (p *Port) FindByKey(ctx context.Context, key string) (*protoport.FindByKeyResponse, error) {
+	logCtx := logrus.WithFields(
+		logrus.Fields{"package": "core", "function": "FindByKey"},
+	)
+
+	resp, err := p.client.FindByKey(ctx, &protoport.FindByKeyRequest{
+		Key: key,
+	})
+	if err != nil {
+		logCtx.Errorf("could not get port on grpc server : %v", err)
+	}
+
+	return resp, err
+}
