@@ -32,7 +32,7 @@ func main() {
 		apiPort = 3000
 	}
 
-	grpcClientURL := utils.GetEnv("PORT_GRPC_URL", "localhost:9090")
+	grpcClientURL := utils.GetEnv("SERVER_GRPC_URL", "localhost:9090")
 	logCtx.Infof("Connecting with GRPC Port Service on url: %s", grpcClientURL)
 	portGrpcClient := port.NewGRPCClient(grpcClientURL)
 
