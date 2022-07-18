@@ -1,4 +1,3 @@
-# poe
 # File Upload to very large JSON files
 
 # Containers commands
@@ -34,6 +33,9 @@
 
       Attach the JSON File to body of the request
       Ex: (on the postman application, use the binary mode to do it)
+
+   ## Default URL to find by key (method GET)
+      - localhost:3000/port/{key}
 
 
 # To change environment variables on the services
