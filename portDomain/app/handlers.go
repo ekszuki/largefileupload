@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"ekszuki/uploader/portDomain/app/core"
 	"ekszuki/uploader/portDomain/app/parsers"
 	protoport "ekszuki/uploader/portDomain/protos/port"
@@ -30,5 +31,11 @@ func (s *Server) UploadPorts(stream protoport.PortService_UploadPortsServer) err
 			return err
 		}
 	}
+}
 
+func (s *Server) FindByKey(ctx context.Context, req *protoport.FindByKeyRequest) (*protoport.FindByKeyResponse, error) {
+	portCore := core.NewPortApplication(s.Repositories.Port)
+	dmPort, err := portCore.FindByKey(ctx, req.GetKey())
+
+	return parsers.FromDomainToFindByKeyResponse(dmPort), err
 }
