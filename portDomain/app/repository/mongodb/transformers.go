@@ -17,3 +17,21 @@ func (db *Port) fromDomain(dmPort *models.Port) error {
 
 	return nil
 }
+
+func (db *Port) ToDomain() *models.Port {
+	dmPort := new(models.Port)
+
+	dmPort.Key = db.Key
+	dmPort.Name = db.Name
+	dmPort.City = db.City
+	dmPort.Country = db.Country
+	dmPort.Alias = db.Alias
+	dmPort.Regions = db.Regions
+	dmPort.Coordinates = db.Coordinates
+	dmPort.Province = db.Province
+	dmPort.Timezone = db.Timezone
+	dmPort.Unlocs = db.Unlocs
+	dmPort.Code = db.Code
+
+	return dmPort
+}

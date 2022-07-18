@@ -35,6 +35,21 @@ func (m *MockPortRepository) EXPECT() *MockPortRepositoryMockRecorder {
 	return m.recorder
 }
 
+// FindByKey mocks base method.
+func (m *MockPortRepository) FindByKey(ctx context.Context, key string) (*models.Port, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByKey", ctx, key)
+	ret0, _ := ret[0].(*models.Port)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByKey indicates an expected call of FindByKey.
+func (mr *MockPortRepositoryMockRecorder) FindByKey(ctx, key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByKey", reflect.TypeOf((*MockPortRepository)(nil).FindByKey), ctx, key)
+}
+
 // SaveOrUpdate mocks base method.
 func (m *MockPortRepository) SaveOrUpdate(ctx context.Context, port *models.Port) error {
 	m.ctrl.T.Helper()

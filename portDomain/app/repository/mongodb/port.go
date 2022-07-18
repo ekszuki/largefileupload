@@ -20,6 +20,17 @@ type PortRepository struct {
 	col *mongo.Collection
 }
 
+// FindByKey implements contracts.PortRepository
+func (r *PortRepository) FindByKey(ctx context.Context, key string) (*models.Port, error) {
+	var dbObj Port
+	err := r.col.FindOne(ctx, bson.D{{"_id", key}}).Decode(&dbObj)
+	if err != nil {
+		return &models.Port{}, err
+	}
+
+	return dbObj.ToDomain(), nil
+}
+
 // SaveOrUpdate implements contracts.PortRepository
 func (r *PortRepository) SaveOrUpdate(ctx context.Context, port *models.Port) error {
 	var dbObj Port
