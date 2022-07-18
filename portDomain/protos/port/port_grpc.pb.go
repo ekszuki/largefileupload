@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PortServiceClient interface {
 	UploadPorts(ctx context.Context, opts ...grpc.CallOption) (PortService_UploadPortsClient, error)
+	FindByKey(ctx context.Context, in *FindByKeyRequest, opts ...grpc.CallOption) (*FindByKeyResponse, error)
 }
 
 type portServiceClient struct {
@@ -67,11 +68,21 @@ func (x *portServiceUploadPortsClient) CloseAndRecv() (*Empty, error) {
 	return m, nil
 }
 
+func (c *portServiceClient) FindByKey(ctx context.Context, in *FindByKeyRequest, opts ...grpc.CallOption) (*FindByKeyResponse, error) {
+	out := new(FindByKeyResponse)
+	err := c.cc.Invoke(ctx, "/PortService/FindByKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PortServiceServer is the server API for PortService service.
 // All implementations must embed UnimplementedPortServiceServer
 // for forward compatibility
 type PortServiceServer interface {
 	UploadPorts(PortService_UploadPortsServer) error
+	FindByKey(context.Context, *FindByKeyRequest) (*FindByKeyResponse, error)
 	mustEmbedUnimplementedPortServiceServer()
 }
 
@@ -81,6 +92,9 @@ type UnimplementedPortServiceServer struct {
 
 func (UnimplementedPortServiceServer) UploadPorts(PortService_UploadPortsServer) error {
 	return status.Errorf(codes.Unimplemented, "method UploadPorts not implemented")
+}
+func (UnimplementedPortServiceServer) FindByKey(context.Context, *FindByKeyRequest) (*FindByKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindByKey not implemented")
 }
 func (UnimplementedPortServiceServer) mustEmbedUnimplementedPortServiceServer() {}
 
@@ -121,13 +135,36 @@ func (x *portServiceUploadPortsServer) Recv() (*UpLoadPortRequest, error) {
 	return m, nil
 }
 
+func _PortService_FindByKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindByKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PortServiceServer).FindByKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/PortService/FindByKey",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PortServiceServer).FindByKey(ctx, req.(*FindByKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PortService_ServiceDesc is the grpc.ServiceDesc for PortService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var PortService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "PortService",
 	HandlerType: (*PortServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "FindByKey",
+			Handler:    _PortService_FindByKey_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "UploadPorts",
